@@ -1,11 +1,13 @@
 import './App.css'
+import Navbar  from './components/header/navbar'
+import Projects from './components/project/project'
+
 
 function App() {
   return (
     <div className='App'>
-      <h1 className='text-8xl'>FTrack</h1>
-      <p>track all your works here </p>
-      <button className='btn'> Start Tracking</button>
+      <Navbar/>
+      <Projects/>
     </div>
   )
 }
