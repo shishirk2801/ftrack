@@ -4,6 +4,23 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import os from 'node:os'
 import { update } from './update'
+import Store from 'electron-store';
+const store = new Store({
+  // Specify the name of the file (without extension) to store the data
+  // Defaults to 'config' if not specified
+  name: 'ftrak',
+
+  // Specify the encryption key for the data file
+  // This is optional and adds encryption to the data file
+  encryptionKey: 'my-secret-key',
+
+  // Specify the defaults for the store if no data is found
+  // This is optional and allows you to specify default values
+  defaults: {
+    theme: 'dark',
+    fontSize: 14,
+  },
+});
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -104,6 +121,13 @@ app.on('activate', () => {
     createWindow()
   }
 })
+ipcMain.handle('set-project-data', (event, projectData) => {
+  store.set('projects', projectData);
+});
+
+ipcMain.handle('get-project-data', () => {
+  return store.get('projects');
+});
 
 // New window example arg: new windows url
 ipcMain.handle('open-win', (_, arg) => {

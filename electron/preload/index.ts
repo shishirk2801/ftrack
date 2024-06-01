@@ -21,6 +21,8 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   // You can expose other APTs you need here.
   // ...
+  setProjectData: (projectData) => ipcRenderer.invoke('set-project-data', projectData),
+  getProjectData: () => ipcRenderer.invoke('get-project-data'),
 })
 
 // --------- Preload scripts loading ---------
