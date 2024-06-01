@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const AddProject = () => {
+const AddProject = (props) => {
   const [projectName, setProjectName] = useState("");
   const [folderPath, setFolderPath] = useState("");
   const handleSubmit = (event) => {
@@ -10,8 +10,8 @@ const AddProject = () => {
       folderPath,
       usage: {},
     };
-    const updatedProjects = [...projects, newProject];
-    setProjects(updatedProjects);
+    const updatedProjects = [...props.projects, newProject];
+    props.updateProjects(updatedProjects);
 
     // Save the updated projects to Electron Store
     window.ipcRenderer.setProjectData(updatedProjects);
