@@ -20,6 +20,9 @@ const Project = (props) => {
           {props.projectName}
         </h2>
       </a>
+      <p className="mx-2 text-font-semibold tracking-tight text-gray-900 dark:text-white">
+        {props.projectPath}
+      </p>
       <h3 className="m-2 p-2">Hours spent today: 5</h3>
     </div>
   );

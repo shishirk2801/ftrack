@@ -23,6 +23,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // ...
   setProjectData: (projectData) => ipcRenderer.invoke('set-project-data', projectData),
   getProjectData: () => ipcRenderer.invoke('get-project-data'),
+  openDirectoryDialog: () => ipcRenderer.invoke('open-folder'),
 })
 
 // --------- Preload scripts loading ---------
