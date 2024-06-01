@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Project from "./project";
 
 const Projects = (props) => {
@@ -8,6 +9,7 @@ const Projects = (props) => {
           <h5 className="text-xl font-medium text-gray-900 dark:text-white">
             Your Projects
           </h5>
+          <hr />
           {props.projects.map((project, index) => (
             <Project
               projectName={project.project}
