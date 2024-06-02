@@ -1,23 +1,27 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 
 const ProjectCard = (props) => {
   const { projectName, projectPath } = props;
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
-  let timer;
+  const intervalRef = useRef(null);
 
   const startTimer = () => {
-    setIsTimerRunning(true);
-    timer = setInterval(() => {
-      setElapsedTime((prevElapsedTime) => prevElapsedTime + 1);
-    }, 1000);
+    if (!isTimerRunning) {
+      setIsTimerRunning(true);
+      intervalRef.current = setInterval(() => {
+        setElapsedTime((prevElapsedTime) => prevElapsedTime + 1);
+      }, 1000);
+    }
   };
 
   const stopTimer = () => {
-    clearInterval(timer);
-    setIsTimerRunning(false);
-    setElapsedTime(0);
+    if (isTimerRunning) {
+      clearInterval(intervalRef.current);
+      setIsTimerRunning(false);
+      setElapsedTime(0);
+    }
   };
 
   return (

@@ -8,7 +8,7 @@ import Store from 'electron-store';
 
 const store = new Store({
   name: 'ftrak',
-  encryptionKey: 'my-secret-key',
+  // encryptionKey: 'my-secret-key',
   defaults: {
     theme: 'dark',
     fontSize: 14,
