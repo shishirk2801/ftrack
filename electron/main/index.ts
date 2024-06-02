@@ -121,3 +121,12 @@ ipcMain.handle('open-win', (_, arg) => {
     childWindow.loadFile(indexHtml, { hash: arg });
   }
 });
+
+
+ipcMain.handle('open-folder-path', async (event, folderPath) => {
+  const result = await shell.openPath(folderPath);
+  if (result) {
+    console.error(`Failed to open folder: ${result}`);
+  }
+  return result;
+});

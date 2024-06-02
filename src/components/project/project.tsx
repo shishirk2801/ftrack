@@ -1,4 +1,7 @@
 const Project = (props) => {
+  const { projectName, projectPath } = props;
+  console.error(projectName, props);
+
   return (
     <div className="max-w-sm mx-2 my-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-700 dark:border-gray-700">
       <a
@@ -16,14 +19,22 @@ const Project = (props) => {
         >
           <path d="M 5 4 C 3.346 4 2 5.346 2 7 L 2 13 L 3 13 L 47 13 L 48 13 L 48 11 C 48 9.346 46.654 8 45 8 L 18.044922 8.0058594 C 17.765922 7.9048594 17.188906 6.9861875 16.878906 6.4921875 C 16.111906 5.2681875 15.317 4 14 4 L 5 4 z M 3 15 C 2.448 15 2 15.448 2 16 L 2 43 C 2 44.657 3.343 46 5 46 L 45 46 C 46.657 46 48 44.657 48 43 L 48 16 C 48 15.448 47.552 15 47 15 L 3 15 z"></path>
         </svg>
-        <h2 className="mx-2 text-font-semibold tracking-tight text-gray-900 dark:text-white">
-          {props.projectName}
+        <h2 className="mx-2 text-font-semibold tracking-tight text-gray-900 dark:text-white float-left">
+          {projectName}
         </h2>
       </a>
       <p className="mx-2 text-font-semibold tracking-tight text-gray-900 dark:text-white">
-        {props.projectPath}
+        {projectPath}
       </p>
-      <h3 className="m-2 p-2">Hours spent today: 5</h3>
+      <button className=" m-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+        Show Project
+      </button>
+      <button
+        className=" m-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        onClick={() => window.ipcRenderer.openProjectDir(projectPath)}
+      >
+        Open Project Dir
+      </button>
     </div>
   );
 };
