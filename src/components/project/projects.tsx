@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Project from "./project";
+import ProjectCard from "./projectCard";
 
 const Projects = (props) => {
   const { projects } = props;
@@ -14,7 +14,7 @@ const Projects = (props) => {
         {projects.map((project, index) => {
           console.error(project);
           return (
-            <Project
+            <ProjectCard
               key={index}
               projectName={project.project}
               projectPath={project.folderPath}

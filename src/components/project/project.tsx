@@ -1,42 +1,130 @@
-const Project = (props) => {
-  const { projectName, projectPath } = props;
-  console.error(projectName, props);
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+
+interface Todo {
+  id: number;
+  text: string;
+  completed: boolean;
+}
+
+interface File {
+  name: string;
+  todos: Todo[];
+}
+
+interface Project {
+  name: string;
+  path: string;
+  totalHours: number;
+  files: File[];
+}
+
+interface ProjectCardProps {
+  project: Project;
+}
+
+const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
+  const [newTodos, setNewTodos] = useState<{ [key: string]: string }>({});
+  const [fileTodos, setFileTodos] = useState<{ [key: string]: Todo[] }>(() => {
+    const initialTodos: { [key: string]: Todo[] } = {};
+    project.files.forEach((file) => {
+      initialTodos[file.name] = file.todos;
+      newTodos[file.name] = "";
+    });
+    return initialTodos;
+  });
+
+  const handleAddTodo = (fileName: string) => {
+    if (!newTodos[fileName].trim()) return;
+
+    const newTodoItem: Todo = {
+      id: Date.now(),
+      text: newTodos[fileName],
+      completed: false,
+    };
+
+    setFileTodos((prev) => ({
+      ...prev,
+      [fileName]: [...prev[fileName], newTodoItem],
+    }));
+
+    setNewTodos((prev) => ({
+      ...prev,
+      [fileName]: "",
+    }));
+  };
+
+  const handleToggleTodo = (fileName: string, todoId: number) => {
+    setFileTodos((prev) => ({
+      ...prev,
+      [fileName]: prev[fileName].map((todo) =>
+        todo.id === todoId ? { ...todo, completed: !todo.completed } : todo
+      ),
+    }));
+  };
 
   return (
-    <div className="max-w-sm mx-2 my-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-700 dark:border-gray-700">
-      <a
-        href="#"
-        className="inline-flex font-medium items-center text-blue-600 hover:underline"
+    <div className="p-4 dark:bg-gray-800 dark:border-gray-700 border rounded-lg shadow-md">
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <h2 className="text-4xl font-semibold">{project.project}</h2>
+        </div>
+        <p className="text-2xl text-gray-500 font-semibold">
+          Total Hours: {project.totalHours}
+        </p>
+      </div>
+      <hr />
+
+      {project.files.map((file) => (
+        <div key={file.name} className="mb-4">
+          <h3 className="text-2xl font-semibold">{file.name}</h3>
+          <ul className="list-disc list-inside mb-2">
+            {fileTodos[file.name].map((todo) => (
+              <li
+                key={todo.id}
+                className={`flex items-center ${
+                  todo.completed ? "text-green-600 line-through" : ""
+                }`}
+                onClick={() => handleToggleTodo(file.name, todo.id)}
+              >
+                <input
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={() => handleToggleTodo(file.name, todo.id)}
+                  className="mr-2 cursor-pointer"
+                />
+                <span>{todo.text}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="flex items-center">
+            <input
+              type="text"
+              value={newTodos[file.name]}
+              onChange={(e) =>
+                setNewTodos({ ...newTodos, [file.name]: e.target.value })
+              }
+              className="border rounded-lg p-2 flex-grow ml-6 mr-2"
+              placeholder="Add new todo"
+            />
+            <button
+              onClick={() => handleAddTodo(file.name)}
+              className="bg-blue-500 text-white p-2 rounded-lg"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+      ))}
+
+      <Link
+        to="/"
+        className="text-blue-500 hover:underline focus:outline-none mt-2 inline-block"
       >
-        <svg
-          className="text-blue-600"
-          xmlns="http://www.w3.org/2000/svg"
-          x="0px"
-          y="0px"
-          width="25"
-          height="25"
-          viewBox="0 0 50 50"
-        >
-          <path d="M 5 4 C 3.346 4 2 5.346 2 7 L 2 13 L 3 13 L 47 13 L 48 13 L 48 11 C 48 9.346 46.654 8 45 8 L 18.044922 8.0058594 C 17.765922 7.9048594 17.188906 6.9861875 16.878906 6.4921875 C 16.111906 5.2681875 15.317 4 14 4 L 5 4 z M 3 15 C 2.448 15 2 15.448 2 16 L 2 43 C 2 44.657 3.343 46 5 46 L 45 46 C 46.657 46 48 44.657 48 43 L 48 16 C 48 15.448 47.552 15 47 15 L 3 15 z"></path>
-        </svg>
-        <h2 className="mx-2 text-font-semibold tracking-tight text-gray-900 dark:text-white float-left">
-          {projectName}
-        </h2>
-      </a>
-      <p className="mx-2 text-font-semibold tracking-tight text-gray-900 dark:text-white">
-        {projectPath}
-      </p>
-      <button className=" m-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-        Show Project
-      </button>
-      <button
-        className=" m-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        onClick={() => window.ipcRenderer.openProjectDir(projectPath)}
-      >
-        Open Project Dir
-      </button>
+        Back to Home
+      </Link>
     </div>
   );
 };
 
-export default Project;
+export default ProjectCard;
