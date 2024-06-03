@@ -22,6 +22,8 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // You can expose other APTs you need here.
   // ...
   setProjectData: (projectData) => ipcRenderer.invoke('set-project-data', projectData),
+  addProjectData: (newProjectData) => ipcRenderer.invoke('add-project-data', newProjectData),
+  updateProjectData: (ProjectData) => ipcRenderer.invoke( "update-project-data", ProjectData),
   getProjectData: () => ipcRenderer.invoke('get-project-data'),
   openDirectoryDialog: () => ipcRenderer.invoke('open-folder'),
   openProjectDir: (projectPath:string) => ipcRenderer.invoke('open-folder-path', projectPath),

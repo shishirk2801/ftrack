@@ -3,6 +3,7 @@ import ProjectCard from "./projectCard";
 
 const Projects = (props) => {
   const { projects } = props;
+  console.error("prop", projects);
 
   const updateUsage = (elapsedSeconds, projectPath) => {
     const today = new Date().toISOString().split("T")[0];
@@ -22,6 +23,7 @@ const Projects = (props) => {
     // Update the projects in your store
     window.ipcRenderer.setProjectData(updatedProjects);
   };
+
   return (
     <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
       <div className="mt-4">
@@ -29,16 +31,15 @@ const Projects = (props) => {
           Your Projects
         </h5>
         <hr />
-        {projects.map((project, index) => {
-          console.error(project);
-          return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+          {projects.map((project, index) => (
             <ProjectCard
               key={index}
               project={project}
               updateUsage={updateUsage}
             />
-          );
-        })}
+          ))}
+        </div>
       </div>
     </div>
   );

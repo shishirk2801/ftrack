@@ -11,12 +11,9 @@ const AddProject = (props) => {
       usage: {},
       files: [],
     };
-    const updatedProjects = [...props.projects, newProject];
-    props.updateProjects(updatedProjects);
-
     // Save the updated projects to Electron Store
-    window.ipcRenderer.setProjectData(updatedProjects);
-
+    window.ipcRenderer.addProjectData(newProject);
+    props.fetchProjects();
     // Clear the form fields
     setProjectName("");
     setFolderPath("");

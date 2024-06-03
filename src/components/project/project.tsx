@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 interface Todo {
@@ -24,6 +24,7 @@ interface ProjectCardProps {
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
+  console.error(project);
   const [newTodos, setNewTodos] = useState<{ [key: string]: string }>({});
   const [fileTodos, setFileTodos] = useState<{ [key: string]: Todo[] }>(() => {
     const initialTodos: { [key: string]: Todo[] } = {};
@@ -32,6 +33,16 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       newTodos[file.name] = "";
     });
     return initialTodos;
+  });
+
+  const [collapsedFiles, setCollapsedFiles] = useState<{
+    [key: string]: boolean;
+  }>(() => {
+    const initialCollapsed: { [key: string]: boolean } = {};
+    project.files.forEach((file) => {
+      initialCollapsed[file.name] = true;
+    });
+    return initialCollapsed;
   });
 
   const handleAddTodo = (fileName: string) => {
@@ -83,6 +94,33 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     return calculateHours(totalUsage);
   };
 
+  useEffect(() => {
+    const saveProjectData = async () => {
+      const updatedProject = {
+        ...project,
+        files: project.files.map((file) => ({
+          ...file,
+          todos: fileTodos[file.name] || [],
+        })),
+      };
+
+      await window.ipcRenderer.invoke("update-project-data", updatedProject);
+    };
+
+    saveProjectData();
+
+    return () => {
+      saveProjectData();
+    };
+  }, [fileTodos, project]);
+
+  const toggleCollapse = (fileName: string) => {
+    setCollapsedFiles((prev) => ({
+      ...prev,
+      [fileName]: !prev[fileName],
+    }));
+  };
+
   return (
     <div className="p-4 dark:bg-gray-800 dark:border-gray-700 border rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-4">
@@ -102,44 +140,56 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       <hr />
 
       {project.files.map((file) => (
-        <div key={file.name} className="mb-4">
-          <h3 className="text-2xl font-semibold">{file.name}</h3>
-          <ul className="list-disc list-inside mb-2">
-            {fileTodos[file.name].map((todo) => (
-              <li
-                key={todo.id}
-                className={`flex items-center ${
-                  todo.completed ? "text-green-600 line-through" : ""
-                }`}
-                onClick={() => handleToggleTodo(file.name, todo.id)}
-              >
-                <input
-                  type="checkbox"
-                  checked={todo.completed}
-                  onChange={() => handleToggleTodo(file.name, todo.id)}
-                  className="mr-2 cursor-pointer"
-                />
-                <span>{todo.text}</span>
-              </li>
-            ))}
-          </ul>
-          <div className="flex items-center">
-            <input
-              type="text"
-              value={newTodos[file.name]}
-              onChange={(e) =>
-                setNewTodos({ ...newTodos, [file.name]: e.target.value })
-              }
-              className="border rounded-lg p-2 flex-grow ml-6 mr-2"
-              placeholder="Add new todo"
-            />
-            <button
-              onClick={() => handleAddTodo(file.name)}
-              className="bg-blue-500 text-white p-2 rounded-lg"
-            >
-              Add
+        <div key={file.name} className="mb-4 px-6">
+          <div
+            className="flex justify-between items-center cursor-pointer"
+            onClick={() => toggleCollapse(file.name)}
+          >
+            <h3 className="text-2xl font-semibold">{file.name}</h3>
+            <button className="text-sm text-blue-500 hover:underline focus:outline-none">
+              {collapsedFiles[file.name] ? "Expand" : "Collapse"}
             </button>
           </div>
+          {!collapsedFiles[file.name] && (
+            <div>
+              <ul className="list-disc list-inside mb-2">
+                {fileTodos[file.name].map((todo) => (
+                  <li
+                    key={todo.id}
+                    className={`flex items-center ${
+                      todo.completed ? "text-green-600 line-through" : ""
+                    }`}
+                    onClick={() => handleToggleTodo(file.name, todo.id)}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={todo.completed}
+                      onChange={() => handleToggleTodo(file.name, todo.id)}
+                      className="mr-2 cursor-pointer"
+                    />
+                    <span>{todo.text}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex items-center px-4">
+                <input
+                  type="text"
+                  value={newTodos[file.name]}
+                  onChange={(e) =>
+                    setNewTodos({ ...newTodos, [file.name]: e.target.value })
+                  }
+                  className="border rounded-lg p-2 flex-grow ml-6 mr-2"
+                  placeholder="Add new todo"
+                />
+                <button
+                  onClick={() => handleAddTodo(file.name)}
+                  className="bg-blue-500 text-white p-2 rounded-lg"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       ))}
 

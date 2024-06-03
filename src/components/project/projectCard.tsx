@@ -35,16 +35,19 @@ const ProjectCard = (props) => {
     const totalSeconds = project.usage[today];
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
-    return `${hours} hours ${minutes} minutes`;
+    return `${hours} h ${minutes} m`;
   };
 
   return (
     <div className="max-w-sm mx-2 my-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-700 dark:border-gray-700">
       <a
         href="#"
-        className="inline-flex m-2 text-4xl font-medium items-center hover:underline dark:text-white"
+        className="w-full inline-flex m-2 text-4xl font-medium items-center hover:underline dark:text-white p-2"
       >
-        {project.project}
+        {project.name}
+        <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 ml-auto">
+          Today: {calculateTotalHours()}
+        </span>
       </a>
       {isTimerRunning && (
         <p className="mx-2 text-font-semibold tracking-tight text-gray-900 dark:text-white">
@@ -90,10 +93,6 @@ const ProjectCard = (props) => {
           >
             <i className="fa-solid fa-arrow-right m-2 p-2"></i>
           </Link>
-        </div>
-
-        <div className="text-center">
-          Total Hours Today: {calculateTotalHours()}
         </div>
       </div>
     </div>
