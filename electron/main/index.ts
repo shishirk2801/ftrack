@@ -8,7 +8,7 @@ import { update } from './update';
 import Store from 'electron-store';
 
 const store = new Store({
-  name: 'ftrak',
+  name: 'ftrack',
   defaults: {
     theme: 'dark',
     fontSize: 14,
@@ -44,7 +44,7 @@ const indexHtml = path.join(RENDERER_DIST, 'index.html');
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
-    icon: path.join(process.env.VITE_PUBLIC, 'favicon.ico'),
+    icon: path.join(process.env.VITE_PUBLIC, 'logo.ico'),
     webPreferences: {
       preload,
     },
