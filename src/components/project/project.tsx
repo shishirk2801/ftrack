@@ -15,7 +15,7 @@ interface File {
 interface Project {
   name: string;
   path: string;
-  totalHours: number;
+  usage: { [date: string]: number };
   files: File[];
 }
 
@@ -63,15 +63,41 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     }));
   };
 
+  const calculateHours = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours} h ${minutes} m`;
+  };
+
+  const calculateTodayHours = () => {
+    const today = new Date().toISOString().split("T")[0];
+    const todayUsage = project.usage[today] || 0;
+    return calculateHours(todayUsage);
+  };
+
+  const calculateTotalHours = () => {
+    const totalUsage = Object.values(project.usage).reduce(
+      (total, usage) => total + usage,
+      0
+    );
+    return calculateHours(totalUsage);
+  };
+
   return (
     <div className="p-4 dark:bg-gray-800 dark:border-gray-700 border rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-4">
         <div>
-          <h2 className="text-4xl font-semibold">{project.project}</h2>
+          <h2 className="text-4xl font-semibold">{project.name}</h2>
         </div>
-        <p className="text-2xl text-gray-500 font-semibold">
-          Total Hours: {project.totalHours}
-        </p>
+        <div>
+          <button
+            type="button"
+            className="focus:outline-none text-white bg-green-900 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-700 dark:hover:bg-green-700 dark:focus:ring-green-800"
+          >
+            Today: {calculateTodayHours()} <br />
+            Total: {calculateTotalHours()}
+          </button>
+        </div>
       </div>
       <hr />
 

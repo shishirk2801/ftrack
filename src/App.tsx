@@ -8,7 +8,9 @@ function App() {
   const projectData = {
     project: "My Project",
     folderPath: "/path/to/project",
-    totalHours: 120,
+    usage: {
+      "2024-06-03": 76,
+    },
     files: [
       {
         name: "index.tsx",
