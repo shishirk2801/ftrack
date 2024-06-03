@@ -6,9 +6,10 @@ const AddProject = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const newProject = {
-      project: projectName,
+      name: projectName,
       folderPath,
       usage: {},
+      files: [],
     };
     const updatedProjects = [...props.projects, newProject];
     props.updateProjects(updatedProjects);
