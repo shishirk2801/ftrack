@@ -22,7 +22,7 @@
   "dependencies": {
     "electron-store": "^9.0.0",
     "electron-updater": "^6.1.8",
-    "react-router-dom": "^6.23.1"
+    "react-router-dom": "^6.24.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.42.1",
