@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "electron-store": "^9.0.0",
-    "electron-updater": "^6.1.8",
+    "electron-updater": "^6.2.1",
     "react-router-dom": "^6.23.1"
   },
   "devDependencies": {
